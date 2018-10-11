@@ -141,6 +141,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleMa
         }
 
         String address = addresses.get(0).getAddressLine(0);
+        String City = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String Country = addresses.get(0).getCountryName();
+        String PostalCode = addresses.get(0).getPostalCode();
 
         marker.setSnippet(address);
         marker.showInfoWindow();
