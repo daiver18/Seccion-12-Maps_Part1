@@ -30,24 +30,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleMap.OnMarkerDragListener,View.OnClickListener{
+public class MapFragment extends Fragment implements OnMapReadyCallback,View.OnClickListener{
 
     private View rootView;
     private GoogleMap gMap;
     private MapView mapView;
 
-    private Geocoder geocoder;
-    private List<Address> addresses;
-
-    private MarkerOptions marker;
-
     private FloatingActionButton fab;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-
+    public MapFragment() {}
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,22 +70,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleMa
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         LatLng MyHome = new LatLng(8.765199899999999, -75.8628734);
-
         CameraUpdate camera = CameraUpdateFactory.zoomTo(15);
-
-        marker = new MarkerOptions();
-        marker.position(MyHome);
-        marker.title("My Home");
-        marker.snippet("caja de texto");
-        marker.draggable(true);
-
-        gMap.addMarker(marker);
         gMap.moveCamera(CameraUpdateFactory.newLatLng(MyHome));
         gMap.animateCamera(camera);
-
-        gMap.setOnMarkerDragListener(this);
-
-        geocoder = new Geocoder(getContext(), Locale.getDefault());
     }
 
     private void checkedGPS(){
@@ -106,6 +85,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleMa
             e.printStackTrace();
         }
     }
+
     private void showAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Alert").setMessage("you don't have GPS enable, please go setting and enable");
@@ -118,33 +98,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,GoogleMa
             });
             builder.setNeutralButton("Cancel",null);
             builder.create().show();
-    }
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-        marker.hideInfoWindow();
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        double latitude = marker.getPosition().latitude;
-        double longitude = marker.getPosition().longitude;
-
-        try {
-            addresses = geocoder.getFromLocation(latitude,longitude,1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String address = addresses.get(0).getAddressLine(0);
-
-        marker.setSnippet(address);
-        marker.showInfoWindow();
-        
     }
 
     @Override
